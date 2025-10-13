@@ -8,7 +8,7 @@ public class Enemy extends Characters {
     private Random random; // Randomiza el tipo de accion que utiliza
 
     public Enemy(String name, int hP, int mP, int atack, int defense, int speed, float crit_Damage,
-             int luck, float precision, int wisdom, String skills, TypeEnemy type) {
+             int luck, float precision, int wisdom, ArrayList<String> skills, TypeEnemy type) {
         super(name, hP, mP, atack, defense, speed, crit_Damage, luck, precision, wisdom, skills);
         this.type = type;
         this.random = new Random();
@@ -72,9 +72,7 @@ public class Enemy extends Characters {
         "/ Luck " + getLuck() +
         "/ Precision " + getPrecision() + 
         "/ Wisdom " + getWisdom() +
-        "/ Abilities " + skillList + "\n";
+        "/ Abilities " + getSkills() + "\n";
     }
     
 }
-
-   
