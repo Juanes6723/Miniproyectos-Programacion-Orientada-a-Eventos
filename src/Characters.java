@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Characters {
     // se ponen todos los atributos que tendran en comun los personajes 
     private String Name;
@@ -10,10 +12,10 @@ public class Characters {
     private int Luck;
     private float Precision;
     private int Wisdom;
-    private String Skills;
+    private ArrayList<String> Skills;
     
     public Characters(String name,int hP, int mP, int atack, int defense, int speed,
-                      float crit_Damage, int luck, float precision,int wisdom, String skills) {
+                      float crit_Damage, int luck, float precision,int wisdom, ArrayList<String> skills) {
         this.Name = name;
         this.HP = hP;
         this.MP = mP;
@@ -30,12 +32,12 @@ public class Characters {
     public String getName() {
         return Name;
     }
-    
-    public String getSkills() {
+
+    public ArrayList<String> getSkills() {
         return Skills;
     }
 
-    public void setSkills(String skills) {
+    public void setSkills(ArrayList<String> skills) {
         Skills = skills;
     }
 
