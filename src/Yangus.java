@@ -1,7 +1,9 @@
+import java.util.ArrayList;
+
 public class Yangus extends Characters{
 
     public Yangus(String name,int hP, int mP, int atack, int defense, int speed, float crit_Damage, int luck, float precision,
-            int wisdom, String skills){
+            int wisdom, ArrayList<String> skills){
         super(name, hP, mP, atack, defense, speed, crit_Damage, luck, precision, wisdom, skills);
     }
 
@@ -16,7 +18,7 @@ public class Yangus extends Characters{
         "/ Luck " + getLuck() +
         "/ Precision " + getPrecision() + 
         "/ Wisdom " + getWisdom() +
-        "/ Abilities " + getSkills();
+        "/ Abilities " + getSkills() + "\n";
     }
 
 }

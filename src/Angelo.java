@@ -1,8 +1,8 @@
 import java.util.ArrayList;
 
-public class The_Hero extends Characters{
+public class Angelo extends Characters{
 
-    public The_Hero(String name,int hP, int mP, int atack, int defense, int speed, float crit_Damage, int luck, float precision,
+    public Angelo(String name,int hP, int mP, int atack, int defense, int speed, float crit_Damage, int luck, float precision,
             int wisdom, ArrayList<String> skills){
         super(name, hP, mP, atack, defense, speed, crit_Damage, luck, precision, wisdom, skills);
     }
