@@ -28,6 +28,28 @@ public class Characters {
         this.Wisdom = wisdom;
         this.Skills = skills;
     }
+    public void attack(Characters target) {
+        int damage = this.Atack - target.getDefense();
+        damage = Math.max(damage, 1); // mínimo 1 de daño
+        target.setHP(target.getHP() - damage);
+        System.out.println(this.getName() + " ataca a " + target.getName() + " causando " + damage + " de daño.");
+    }
+
+    public void defend() {
+        this.Defense += 5; // defensa temporal
+        System.out.println(this.getName() + " se defiende y aumenta su defensa a " + this.Defense);
+    }
+
+    public void useSkill(Characters target) {
+        if (Skills.isEmpty()) {
+            System.out.println(this.getName() + " no tiene habilidades.");
+            return;
+        }
+        String skill = Skills.get(0); // usa la primera habilidad
+        int skillDamage = this.Wisdom + this.Atack;
+        target.setHP(target.getHP() - skillDamage);
+        System.out.println(this.getName() + " usa " + skill + " contra " + target.getName() + " causando " + skillDamage + " de daño.");
+    }
     
     public String getName() {
         return Name;

@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.List; 
 import java.util.Scanner;
 
@@ -66,6 +67,171 @@ public class App {
         // Lista segun el orden de ataque
 
         ArrayList <Characters> OrdenAtaque = new ArrayList<Characters>();
+
+        // Lista con TODOS los personajes
+
+        ArrayList <Characters> todos = new ArrayList<Characters>();
+        todos.add(the_Hero);
+        todos.add(yangus);
+        todos.add(jessica);
+        todos.add(angelo);
+        todos.add(limo);
+        todos.add(berenjeno);
+        todos.add(pinchorugo);
+        todos.add(labibabosa);
+
+        while(!todos.isEmpty()){
+            Characters mosFast = todos.get(0);
+
+            for(Characters c : todos){
+                if(c.getSpeed() > mosFast.getSpeed()){
+                    mosFast = c;
+                }
+            }
+
+            OrdenAtaque.add(mosFast);
+
+            todos.remove(mosFast);
+            }
+
+
+            System.out.println("orden de ataque");
+            for (Characters c : OrdenAtaque){
+            System.out.println(c.getName() + "(velocidad: " + c.getSpeed() + ")");
+            }
+
+        boolean inCombat = true;
+
+    
+        // codigo para verificar que todo este en orden 
+    
+        // System.out.println(listaCharacters);
+    
+        // System.out.println("\n Enemy:");
+        // System.out.println(enemy);
+
+        System.out.println("Has entrado en combate");
+        System.out.println("Te enfrentas a: " + enemy.get(0).getName() + " " + enemy.get(1).getName() + " " + enemy.get(2).getName() + " " + enemy.get(3).getName());
+        System.out.println("Primero en atacar sera: " + OrdenAtaque.get(0).getName());
+
+        while (inCombat) {
+            ArrayList<Characters> vivos = new ArrayList<>();
+            for (Characters c : OrdenAtaque) {
+                if (c.getHP() > 0) vivos.add(c);
+            }
+            for (Characters atacante : vivos) {
+                if (!inCombat) break;
+                System.out.println("\nTurno de: " + atacante.getName());
+                if (listaCharacters.contains(atacante)) {
+                    // Turno del jugador
+                    System.out.println("¿Qué deseas hacer?");
+                    System.out.println("1. Atacar");
+                    System.out.println("2. Defenderse");
+                    System.out.println("3. Usar habilidad");
+                    System.out.println("4. Huir");
+                    System.out.print("Elige una opción: ");
+                    int opcion = sc.nextInt();
+
+                    // Selecciona primer enemigo vivo como objetivo
+                    Characters objetivo = null;
+                    for (Characters e : enemy) {
+                        if (e.getHP() > 0) {
+                            objetivo = e;
+                            break;
+                        }
+                    }
+
+                    if (objetivo == null) {
+                        System.out.println("No hay enemigos vivos.");
+                        inCombat = false;
+                        break;
+                    }
+
+                    switch (opcion) {
+                        case 1:
+                            atacante.attack(objetivo);
+                            break;
+                        case 2:
+                            atacante.defend();
+                            break;
+                        case 3:
+                            atacante.useSkill(objetivo);
+                            break;
+                        case 4:
+                            System.out.println(atacante.getName() + " ha huido del combate.");
+                            inCombat = false;
+                            break;
+                        default:
+                            System.out.println("Opción inválida.");
+                            break;
+                    }
+
+                } else {
+                    // Turno del enemigo
+                    Characters objetivo = null;
+                    for (Characters h : listaCharacters) {
+                        if (h.getHP() > 0) {
+                            objetivo = h;
+                            break;
+                        }
+                    }
+
+                    if (objetivo == null) {
+                        System.out.println("No hay héroes vivos.");
+                        inCombat = false;
+                        break;
+                    }
+
+                    String accion = ((Enemy) atacante).decideAction();
+                    switch (accion) {
+                        case "attack":
+                            atacante.attack(objetivo);
+                            break;
+                        case "defend":
+                            atacante.defend();
+                            break;
+                        case "heal":
+                            atacante.setHP(atacante.getHP() + 5);
+                            System.out.println(atacante.getName() + " se cura 5 puntos de vida.");
+                            break;
+                        case "Use skill":
+                            atacante.useSkill(objetivo);
+                            break;
+                    }
+                }
+                // Verifica si el combate terminó
+                boolean heroesVivos = false;
+                    for (Characters c : listaCharacters) {
+                        if (c.getHP() > 0) {
+                            heroesVivos = true;
+                            break;
+                        }
+                    }
+                    boolean enemigosVivos = false;
+                    for (Characters e : enemy) {
+                        if (e.getHP() > 0) {
+                            enemigosVivos = true;
+                            break;
+                        }
+                    }
+                if (!heroesVivos || !enemigosVivos) {
+                    inCombat = false;
+                    System.out.println("\n¡El combate ha terminado!");
+                    if (heroesVivos) {
+                        System.out.println("¡Los héroes han ganado!");
+                    } else {
+                        System.out.println("Los enemigos han vencido...");
+                    }
+                    break;
+                }
+                // Pausa visual
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 
         // Lista con TODOS los personajes
 
