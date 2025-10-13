@@ -1,5 +1,10 @@
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.List; 
+import java.util.Scanner;
+
+
+//ejemplo para verificar que todo este funcionando 
 
 public class App {
     public static void main(String[] args) throws Exception{
@@ -227,5 +232,76 @@ public class App {
                 }
             }
         }
+
+        // Lista con TODOS los personajes
+
+        ArrayList <Characters> todos = new ArrayList<Characters>();
+        todos.add(the_Hero);
+        todos.add(yangus);
+        todos.add(jessica);
+        todos.add(angelo);
+        todos.add(limo);
+        todos.add(berenjeno);
+        todos.add(pinchorugo);
+        todos.add(labibabosa);
+
+        while(!todos.isEmpty()){
+            Characters mosFast = todos.get(0);
+
+            for(Characters c : todos){
+                if(c.getSpeed() > mosFast.getSpeed()){
+                    mosFast = c;
+                }
+            }
+
+            OrdenAtaque.add(mosFast);
+
+            todos.remove(mosFast);
+            }
+
+
+            System.out.println("orden de ataque");
+            for (Characters c : OrdenAtaque){
+            System.out.println(c.getName() + "(velocidad: " + c.getSpeed() + ")");
+            }
+
+        boolean inCombat = true;
+
+    
+        // codigo para verificar que todo este en orden 
+    
+        // System.out.println(listaCharacters);
+    
+        // System.out.println("\n Enemy:");
+        // System.out.println(enemy);
+
+        System.out.println("Has entrado en combate");
+        System.out.println("Te enfrentas a: " + enemy.get(0).getName() + " " + enemy.get(1).getName() + " " + enemy.get(2).getName() + " " + enemy.get(3).getName());
+        System.out.println("Primero en atacar sera: " + OrdenAtaque.get(0).getName());
+
+        while(inCombat){
+
+            System.out.println("\n¿Qué deseas hacer?");
+            System.out.println("1. Atacar");
+            System.out.println("2. Defenderse");
+            System.out.println("3. Usar habilidad");
+            System.out.println("4. Huir");
+            System.out.print("Elige una opción: ");
+
+            int opcion = sc.nextInt();
+
+            switch (opcion) {
+                case 1:
+                    
+                    
+                    break;
+            
+                default:
+                    break;
+            }
+        }
+
+
     }
+
 }
