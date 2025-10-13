@@ -1,14 +1,16 @@
 import java.util.ArrayList;
-import java.util.List; 
+// import java.util.List; 
 
 //ejemplo para verificar que todo este funcionando 
 
 public class App {
     public static void main(String[] args) throws Exception{
 
-        The_Hero the_Hero = new The_Hero("The Hero",22, 0, 8, 6, 6, 1.5f, 3, 3.0f, 5, "");
+        The_Hero the_Hero = new The_Hero("The Hero",30, 0, 8, 6, 6, 1.5f, 3, 3.0f, 5, "");
         Yangus yangus = new Yangus("Yangus", 25, 0, 18, 12, 6, 2.0f, 8, 3.0f, 5, "");
-        
+        Jessica jessica = new Jessica("Jessica", 34, 18, 14, 12, 20, 2.0f, 8, 3.0f, 5, "");
+        Angelo angelo = new Angelo("Angelo", 25, 0, 18, 12, 6, 2.0f, 8, 3.0f, 5, "");
+
         Enemy limo = new Enemy("Limo", 3, 5, 5, 3, 2, 1f, 1, 2f, 2, "", TypeEnemy.AGGRESSIVE);
         limo.addSkills("Placaje");
 
@@ -32,6 +34,8 @@ public class App {
         
         listaCharacters.add(the_Hero);
         listaCharacters.add(yangus);
+        listaCharacters.add(jessica);
+        listaCharacters.add(angelo);
 
         //codigo para verificar que todo este en orden 
 
