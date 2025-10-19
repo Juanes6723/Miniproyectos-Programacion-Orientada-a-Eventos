@@ -2,134 +2,121 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class App {
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         Scanner sc = new Scanner(System.in);
 
-        // Listas donde se almacenaran las habilidades de cada personaje y de los enemigos segun su tipo de comportamiento
-
-        ArrayList<String> skillsThe_Hero = new ArrayList<>();
-        skillsThe_Hero.add("lightning jump");
+        // Habilidades por personaje 
+        ArrayList<String> skillsHero = new ArrayList<>();
+        skillsHero.add("FIREBALL");
 
         ArrayList<String> skillsYangus = new ArrayList<>();
-        skillsYangus.add("Stun Axe");
+        skillsYangus.add("SWEET_BREATH");
 
         ArrayList<String> skillsJessica = new ArrayList<>();
-        skillsJessica.add("hellfire");
+        skillsJessica.add("HEAL");
 
         ArrayList<String> skillsAngelo = new ArrayList<>();
-        skillsAngelo.add("falcon cut");
-
-        ArrayList<String> skillsAggressive = new ArrayList<>();
-        skillsAggressive.add("Placaje");
-
-        ArrayList<String> skillsHealer = new ArrayList<>();
-        skillsHealer.add("Cura Total");
-
-        ArrayList<String> skillsDefensive = new ArrayList<>();
-        skillsDefensive.add("Defensa Ferrea");
+        skillsAngelo.add("FIREBALL");
 
         ArrayList<String> skillsSorcerer = new ArrayList<>();
-        skillsSorcerer.add("Bola de Fuego");
+        skillsSorcerer.add("SWEET_BREATH");
 
-        // Creacion de los personajes principales y enemigos con sus atributos predeterminados de nivel 1
+        // Habilidades del MINIBOSS
+        ArrayList<String> skillsMiniBoss = new ArrayList<>();
+        skillsMiniBoss.add("DRAGON_FIRE");
 
-        The_Hero the_Hero = new The_Hero("The Hero",22, 0, 8, 6, 6, 1.5f, 3, 3.0f, 5, skillsThe_Hero);
-        Yangus yangus = new Yangus("Yangus", 25, 0, 18, 12, 6, 2.0f, 8, 3.0f, 5, skillsYangus);
-        Jessica jessica = new Jessica("Jessica",16, 10, 6, 6, 10, 1.2f, 7, 3.0f, 12, skillsJessica);
-        Angelo angelo = new Angelo("Angelo", 18, 8, 8, 8, 9, 1.3f, 9, 3.0f, 11, skillsAngelo);
+        // Crear héroes con atributos reales
+        Heroes hero = new Heroes("Heroe", 100, 50, 20, 10, 15, 1.5f, 0.2f, 25, skillsHero);
+        Heroes yangus = new Heroes("Yangus", 120, 40, 25, 15, 10, 1.3f, 0.15f, 10, skillsYangus);
+        Heroes jessica = new Heroes("Jessica", 90, 60, 18, 8, 12, 1.4f, 0.25f, 30, skillsJessica);
+        Heroes angelo = new Heroes("Angelo", 110, 45, 22, 12, 14, 1.2f, 0.18f, 20, skillsAngelo);
 
-        
-        Enemy limo = new Enemy("Limo", 3, 5, 5, 3, 2, 1f, 1, 2f, 2, skillsAggressive, TypeEnemy.AGGRESSIVE);
-        Enemy berenjeno = new Enemy("Berenjeno", 5, 10, 2, 3, 6, 1f, 2, 1f, 1, skillsHealer, TypeEnemy.HEALER);
-        Enemy pinchorugo = new Enemy("Pinchorugo", 10, 5, 2, 10, 1, 3f, 1, 2f, 1, skillsDefensive, TypeEnemy.DEFENSIVE);
-        Enemy labibabosa = new Enemy("Labibabosa", 10, 10, 50, 2, 2, 5f, 5, 1f, 1, skillsSorcerer, TypeEnemy.SORCERER);
+        // Crear enemigos con tipo y habilidades
+        Enemy limo = new Enemy("Limo", 80, 30, 15, 8, 12, 1.2f, 0.1f, 20, skillsSorcerer, TypeEnemy.SORCERER);
+        Enemy berenjeno = new Enemy("Berenjeno", 70, 40, 10, 10, 8, 1.1f, 0.1f, 25, skillsSorcerer, TypeEnemy.HEALER);
+        Enemy pinchorugo = new Enemy("Pinchorugo", 90, 20, 18, 12, 10, 1.3f, 0.15f, 15, skillsSorcerer, TypeEnemy.DEFENSIVE);
 
-        // Listas con todos los personajes y enemigos 
+        // Crear MINIBOSS
+        Enemy miniBoss = new Enemy("Dragón Rojo", 200, 100, 35, 20, 18, 2.0f, 0.3f, 40, skillsMiniBoss, TypeEnemy.MINI_BOSS);
 
-        ArrayList<Characters> enemy = new ArrayList<>();
-        enemy.add(limo);
-        enemy.add(berenjeno);
-        enemy.add(pinchorugo);
-        enemy.add(labibabosa);
+        // Listas de personajes
+        ArrayList<Characters> heroes = new ArrayList<>();
+        heroes.add(hero);
+        heroes.add(yangus);
+        heroes.add(jessica);
+        heroes.add(angelo);
 
+        ArrayList<Characters> enemies = new ArrayList<>();
+        enemies.add(limo);
+        enemies.add(berenjeno);
+        enemies.add(pinchorugo);
 
-        ArrayList <Characters> listaCharacters = new ArrayList<Characters>();    
-        listaCharacters.add(the_Hero);
-        listaCharacters.add(yangus);
-        listaCharacters.add(jessica);
-        listaCharacters.add(angelo);
-        
-        // Lista segun el orden de ataque
+        // Orden de ataque por velocidad
+        ArrayList<Characters> ordenAtaque = new ArrayList<>();
+        ArrayList<Characters> todos = new ArrayList<>();
+        todos.addAll(heroes);
+        todos.addAll(enemies);
 
-        ArrayList <Characters> OrdenAtaque = new ArrayList<Characters>();
-
-        // Lista con TODOS los personajes
-
-        ArrayList <Characters> todos = new ArrayList<Characters>();
-        todos.add(the_Hero);
-        todos.add(yangus);
-        todos.add(jessica);
-        todos.add(angelo);
-        todos.add(limo);
-        todos.add(berenjeno);
-        todos.add(pinchorugo);
-        todos.add(labibabosa);
-
-        while(!todos.isEmpty()){
-            Characters mosFast = todos.get(0);
-
-            for(Characters c : todos){
-                if(c.getSpeed() > mosFast.getSpeed()){
-                    mosFast = c;
+        while (!todos.isEmpty()) {
+            Characters fastest = todos.get(0);
+            for (Characters c : todos) {
+                if (c.getSpeed() > fastest.getSpeed()) {
+                    fastest = c;
                 }
             }
+            ordenAtaque.add(fastest);
+            todos.remove(fastest);
+        }
 
-            OrdenAtaque.add(mosFast);
+        System.out.println("Orden de ataque:");
+        for (Characters c : ordenAtaque) {
+            System.out.println(c.getName() + " (Velocidad: " + c.getSpeed() + ")");
+        }
 
-            todos.remove(mosFast);
-            }
-
-
-            System.out.println("orden de ataque");
-            for (Characters c : OrdenAtaque){
-            System.out.println(c.getName() + "(velocidad: " + c.getSpeed() + ")");
-            }
+        System.out.println("\n¡Has entrado en combate!");
+        System.out.println("Enemigos: ");
+        for (Characters e : enemies) {
+            System.out.println("- " + e.getName());
+        }
 
         boolean inCombat = true;
 
-    
-        // codigo para verificar que todo este en orden 
-    
-        // System.out.println(listaCharacters);
-    
-        // System.out.println("\n Enemy:");
-        // System.out.println(enemy);
-
-        System.out.println("Has entrado en combate");
-        System.out.println("Te enfrentas a: " + enemy.get(0).getName() + " " + enemy.get(1).getName() + " " + enemy.get(2).getName() + " " + enemy.get(3).getName());
-        System.out.println("Primero en atacar sera: " + OrdenAtaque.get(0).getName());
-
         while (inCombat) {
             ArrayList<Characters> vivos = new ArrayList<>();
-            for (Characters c : OrdenAtaque) {
+            for (Characters c : ordenAtaque) {
                 if (c.getHP() > 0) vivos.add(c);
             }
+
             for (Characters atacante : vivos) {
                 if (!inCombat) break;
+
                 System.out.println("\nTurno de: " + atacante.getName());
-                if (listaCharacters.contains(atacante)) {
+
+                if (atacante.processStatusEffects()) continue;
+
+                System.out.println("Estado actual:");
+                    for (Characters h : heroes) {
+                        System.out.println(h.getName() + " - HP: " + h.getHP() + "/" + h.getMaxHP() +
+                            " (" + h.getHPPercentage() + "%), MP: " + h.getMP() + "/" + h.getMaxMP() +
+                            " (" + h.getMPPercentage() + "%)");
+                    }
+                    for (Characters e : enemies) {
+                        System.out.println(e.getName() + " - HP: " + e.getHP() + "/" + e.getMaxHP() +
+                            " (" + e.getHPPercentage() + "%), MP: " + e.getMP() + "/" + e.getMaxMP() +
+                            " (" + e.getMPPercentage() + "%)");
+                    }
+                if (heroes.contains(atacante)) {
                     // Turno del jugador
                     System.out.println("¿Qué deseas hacer?");
                     System.out.println("1. Atacar");
-                    System.out.println("2. Defenderse");
+                    System.out.println("2. Defender");
                     System.out.println("3. Usar habilidad");
                     System.out.println("4. Huir");
                     System.out.print("Elige una opción: ");
                     int opcion = sc.nextInt();
 
-                    // Selecciona primer enemigo vivo como objetivo
                     Characters objetivo = null;
-                    for (Characters e : enemy) {
+                    for (Characters e : enemies) {
                         if (e.getHP() > 0) {
                             objetivo = e;
                             break;
@@ -142,6 +129,19 @@ public class App {
                         break;
                     }
 
+                    boolean enemigosNormalesVivos = enemies.stream().filter(e -> ((Enemy) e).getType() != TypeEnemy.MINI_BOSS).anyMatch(e -> e.getHP() > 0);
+
+                    boolean miniBossYaAgregado = enemies.contains(miniBoss);
+
+                    if (!enemigosNormalesVivos && !miniBossYaAgregado) {
+                        System.out.println("\n¡Un rugido sacude el campo de batalla!");
+                        System.out.println("¡" + miniBoss.getName() + " ha aparecido!");
+
+                        enemies.add(miniBoss);
+                        ordenAtaque.add(miniBoss);
+                        miniBossYaAgregado = true;
+                    }
+
                     switch (opcion) {
                         case 1:
                             atacante.attack(objetivo);
@@ -150,7 +150,13 @@ public class App {
                             atacante.defend();
                             break;
                         case 3:
-                            atacante.useSkill(objetivo);
+                            if (!atacante.getSkills().isEmpty()) {
+                                String skillName = atacante.getSkills().get(0);
+                                SkillsList skillEnum = SkillsList.valueOf(skillName);
+                                atacante.useSkill(skillEnum, objetivo);
+                            } else {
+                                System.out.println("No tienes habilidades.");
+                            }
                             break;
                         case 4:
                             System.out.println(atacante.getName() + " ha huido del combate.");
@@ -162,9 +168,9 @@ public class App {
                     }
 
                 } else {
-                    // Turno del enemigo
+                    // Turno del enemigo automático
                     Characters objetivo = null;
-                    for (Characters h : listaCharacters) {
+                    for (Characters h : heroes) {
                         if (h.getHP() > 0) {
                             objetivo = h;
                             break;
@@ -177,38 +183,13 @@ public class App {
                         break;
                     }
 
-                    String accion = ((Enemy) atacante).decideAction();
-                    switch (accion) {
-                        case "attack":
-                            atacante.attack(objetivo);
-                            break;
-                        case "defend":
-                            atacante.defend();
-                            break;
-                        case "heal":
-                            atacante.setHP(atacante.getHP() + 5);
-                            System.out.println(atacante.getName() + " se cura 5 puntos de vida.");
-                            break;
-                        case "Use skill":
-                            atacante.useSkill(objetivo);
-                            break;
-                    }
+                    ((Enemy) atacante).takeTurn(objetivo);
                 }
-                // Verifica si el combate terminó
-                boolean heroesVivos = false;
-                    for (Characters c : listaCharacters) {
-                        if (c.getHP() > 0) {
-                            heroesVivos = true;
-                            break;
-                        }
-                    }
-                    boolean enemigosVivos = false;
-                    for (Characters e : enemy) {
-                        if (e.getHP() > 0) {
-                            enemigosVivos = true;
-                            break;
-                        }
-                    }
+
+                // Verificar si el combate terminó
+                boolean heroesVivos = heroes.stream().anyMatch(h -> h.getHP() > 0);
+                boolean enemigosVivos = enemies.stream().anyMatch(e -> e.getHP() > 0);
+
                 if (!heroesVivos || !enemigosVivos) {
                     inCombat = false;
                     System.out.println("\n¡El combate ha terminado!");
@@ -219,13 +200,11 @@ public class App {
                     }
                     break;
                 }
-                // Pausa visual
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+
+                Thread.sleep(1000); // pausa visual
             }
         }
+
+        sc.close();
     }
 }
