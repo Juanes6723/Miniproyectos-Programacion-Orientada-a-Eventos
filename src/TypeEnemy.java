@@ -1,3 +1,7 @@
 public enum TypeEnemy {
-    AGGRESSIVE, HEALER, DEFENSIVE, SORCERER
+    AGGRESSIVE, //Tipos de enemigos, se pueden agregar mas despues
+    HEALER, 
+    DEFENSIVE, 
+    SORCERER,
+    MINI_BOSS
 }
