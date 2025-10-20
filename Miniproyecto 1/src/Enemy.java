@@ -42,7 +42,7 @@ public class Enemy extends Characters {
                 return getMP() >= 5 ? "Use skill" : "attack";
             case MINI_BOSS:
                 if (getHP() < getMaxHP() * 0.3 && getMP() >= 8) {
-                    return "Use skill"; // usa habilidad fuerte si está débil
+                    return "Use skill"; 
                 } else if (getMP() >= 5) {
                     return random.nextBoolean() ? "Use skill" : "attack";
                 } else {
@@ -56,11 +56,8 @@ public class Enemy extends Characters {
     public void takeTurn(Characters target) { // Turno del enemigo
         
         if (getHP() <= 0) return; // si está muerto, no hace nada
-    
         if (processStatusEffects()) return; // si está dormido, pierde el turno
-
         String action = decideAction();
-
         switch (action) {
             case "attack":
                 attack(target);
@@ -99,6 +96,7 @@ public class Enemy extends Characters {
         "/ Defense " + getDefense() +
         "/ Speed " + getSpeed() +
         "/ Crit Damage " + getCrit_Damage() +
+        "/ Crit Chance " + getCrit_Change() +
         "/ Abilities " + getSkills() + "\n";
     }
     
