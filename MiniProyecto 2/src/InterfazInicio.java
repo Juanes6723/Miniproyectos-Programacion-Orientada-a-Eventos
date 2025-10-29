@@ -93,11 +93,14 @@ public class InterfazInicio extends JFrame {
         setUndecorated(true);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setVisible(true);
+        try {
+            Audio.reproducir("music/musicaInicio.wav");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new InterfazInicio());
     }
 }
-
-

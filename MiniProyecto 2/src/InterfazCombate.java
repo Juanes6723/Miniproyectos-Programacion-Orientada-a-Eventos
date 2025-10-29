@@ -66,6 +66,12 @@ public class InterfazCombate extends JFrame {
 
         add(panelFondo);
         setVisible(true);
+        try {
+            Audio.reproducir("music/musicaBatalla.wav");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
         iniciarCombate();
     }
