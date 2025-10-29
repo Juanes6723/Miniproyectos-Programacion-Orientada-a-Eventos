@@ -1,3 +1,0 @@
-public enum TypeEnemy {
-    AGGRESSIVE, HEALER, DEFENSIVE, SORCERER
-}
