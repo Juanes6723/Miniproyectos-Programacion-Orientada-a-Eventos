@@ -1,3 +1,4 @@
+package models;
 public class Skills { 
     // Clase para definir las habilidades
     private String name;
