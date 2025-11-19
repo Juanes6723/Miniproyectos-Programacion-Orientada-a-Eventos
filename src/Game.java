@@ -2,6 +2,12 @@ import java.util.ArrayList;
 import java.util.Scanner;
 // import javax.swing.*;
 import javax.swing.JOptionPane;
+
+import models.Characters;
+import models.Enemy;
+import models.Heroes;
+import models.SkillsList;
+import models.TypeEnemy;
 // , "\nTurno de: " + attacker.getName()
 public class Game {
     private ArrayList<Characters> heroes;
