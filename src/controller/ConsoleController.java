@@ -1,21 +1,25 @@
+package controller;
 import java.util.ArrayList;
-import java.util.Scanner;
-// import javax.swing.*;
-import javax.swing.JOptionPane;
-
+import java.util.List;
 import models.Characters;
 import models.Enemy;
 import models.Heroes;
 import models.SkillsList;
 import models.TypeEnemy;
-// , "\nTurno de: " + attacker.getName()
-public class Game {
-    private ArrayList<Characters> heroes;
-    private ArrayList<Characters> enemies;
-    private ArrayList<Characters> attackOrder;
+import view.VistaConsola;
+
+public class ConsoleController {
+    private List<Characters> heroes;
+    private List<Characters> enemies;
+    private List<Characters> attackOrder;
     private Enemy miniBoss;
-    private Scanner sc = new Scanner(System.in);
     private boolean miniBossAlreadyAdded = false;
+
+    private final VistaConsola view;
+
+    public ConsoleController(VistaConsola view) {
+        this.view = view;
+    }
 
     public void creation() {
         // Crear habilidades
@@ -38,14 +42,14 @@ public class Game {
         15, 1.5f, 0.2f, 25, skillsHero));
         heroes.add(new Heroes("Yangus", 120, 40, 25, 15,
         10, 1.3f, 0.15f, 10, skillsYangus));
-        heroes.add(new Heroes("Jessica", 90, 60, 18, 8, 
+        heroes.add(new Heroes("Jessica", 90, 60, 18, 8,
         12, 1.4f, 0.25f, 30, skillsJessica));
-        heroes.add(new Heroes("Angelo", 110, 45, 22, 12, 
+        heroes.add(new Heroes("Angelo", 110, 45, 22, 12,
         14, 1.2f, 0.18f, 20, skillsAngelo));
 
         // Crea los enemigos
         enemies = new ArrayList<>();
-        enemies.add(new Enemy("Limo", 80, 30, 15, 8, 
+        enemies.add(new Enemy("Limo", 80, 30, 15, 8,
         12, 1.2f, 0.1f, 20, skillsSorcerer, TypeEnemy.SORCERER));
         enemies.add(new Enemy("Berenjeno", 70, 40, 10, 10,
         8, 1.1f, 0.1f, 25, skillsSorcerer, TypeEnemy.HEALER));
@@ -75,9 +79,9 @@ public class Game {
     }
 
     public void start() {
-        // System.out.println("\n¡Has entrado en combate!");
+        view.showMessage("\n¡Has entrado en combate!");
         for (Characters e : enemies) {
-            System.out.println("- " + e.getName());
+            view.showMessage("- " + e.getName());
         }
         boolean inCombat = true;
         while (inCombat) {
@@ -87,9 +91,8 @@ public class Game {
             }
             for (Characters attacker : alive) {
                 if (!inCombat) break;
-                JOptionPane.showMessageDialog(null, this, "\nTurno de: " + attacker.getName(), 0);
                 if (attacker.processStatusEffects()) continue;
-                showStatus();
+                view.showStatus(heroes, enemies);
                 if (heroes.contains(attacker)) {
                     inCombat = turnPlayer(attacker);
                 } else {
@@ -99,61 +102,57 @@ public class Game {
                     inCombat = false;
                     break;
                 }
-                pause();
+                view.pause();
             }
         }
     }
 
-    private void showStatus() {
-        System.out.println("Estado actual:");
-        for (Characters h : heroes) {
-            System.out.println(h.getName() + " - HP: " + h.getHP() + "/" + h.getMaxHP() +
-                " (" + h.getHPPercentage() + "%), MP: " + h.getMP() + "/" + h.getMaxMP() +
-                " (" + h.getMPPercentage() + "%)");
-        }
-        for (Characters e : enemies) {
-            System.out.println(e.getName() + " - HP: " + e.getHP() + "/" + e.getMaxHP() +
-                " (" + e.getHPPercentage() + "%), MP: " + e.getMP() + "/" + e.getMaxMP() +
-                " (" + e.getMPPercentage() + "%)");
-        }
-    }
-
     private boolean turnPlayer(Characters attacker) {
-        System.out.println("¿Qué deseas hacer?");
-        System.out.println("1. Atacar");
-        System.out.println("2. Defender");
-        System.out.println("3. Usar habilidad");
-        System.out.println("4. Huir");
-        System.out.print("Elige una opción: ");
-        int option = sc.nextInt();
+        int option = view.promptPlayerAction(attacker);
 
-        Characters target = chooseTarget(enemies);
-        if (target == null) {
-            System.out.println("No hay enemigos vivos.");
+        // Preparar lista de objetivos vivos
+        List<Characters> aliveEnemies = new ArrayList<>();
+        for (Characters e : enemies) if (e.getHP() > 0) aliveEnemies.add(e);
+        if (aliveEnemies.isEmpty()) {
+            view.showMessage("No hay enemigos vivos.");
             return false;
+        }
+
+        Characters target = null;
+        if (!aliveEnemies.isEmpty()) {
+            int choice = view.promptTargetChoice(aliveEnemies);
+            if (choice > 0 && choice <= aliveEnemies.size()) {
+                target = aliveEnemies.get(choice - 1);
+            } else {
+                view.showMessage("Acción cancelada o selección inválida.");
+                return true; // seguir combate
+            }
         }
 
         switch (option) {
             case 1:
                 attacker.attack(target);
+                view.showMessage(attacker.getName() + " ataca a " + target.getName());
                 break;
             case 2:
                 attacker.defend();
+                view.showMessage(attacker.getName() + " se defiende.");
                 break;
             case 3:
                 if (!attacker.getSkills().isEmpty()) {
                     String skillName = attacker.getSkills().get(0);
                     SkillsList skillEnum = SkillsList.valueOf(skillName);
                     attacker.useSkill(skillEnum, target);
+                    view.showMessage(attacker.getName() + " usa " + skillName + " sobre " + target.getName());
                 } else {
-                    System.out.println("No tienes habilidades.");
+                    view.showMessage("No tienes habilidades.");
                 }
                 break;
             case 4:
-                System.out.println(attacker.getName() + " ha huido del combate.");
+                view.showMessage(attacker.getName() + " ha huido del combate.");
                 return false;
             default:
-                System.out.println("Opción inválida.");
+                view.showMessage("Opción inválida.");
                 break;
         }
         verifyMiniBoss();
@@ -163,13 +162,14 @@ public class Game {
     private void turnEnemy(Enemy attacker) {
         Characters target = chooseTarget(heroes);
         if (target == null) {
-            System.out.println("No hay héroes vivos.");
+            view.showMessage("No hay héroes vivos.");
             return;
         }
         attacker.takeTurn(target);
+        view.showMessage(attacker.getName() + " ataca a " + target.getName());
     }
 
-    private Characters chooseTarget(ArrayList<Characters> group) {
+    private Characters chooseTarget(List<Characters> group) {
         for (Characters c : group) {
             if (c.getHP() > 0) return c;
         }
@@ -183,72 +183,55 @@ public class Game {
             .anyMatch(e -> e.getHP() > 0);
 
         if (!enemiesNormalAlive && !miniBossAlreadyAdded) {
-            System.out.println("¡" + miniBoss.getName() + " ha aparecido!");
+            view.showMessage("¡" + miniBoss.getName() + " ha aparecido!");
 
             enemies.add(miniBoss);
             attackOrder.add(miniBoss);
             miniBossAlreadyAdded = true;
         }
-}
-
+    }
 
     private boolean verifyEndCombat() {
         boolean livingHeroes = heroes.stream().anyMatch(h -> h.getHP() > 0);
         boolean livingEnemies = enemies.stream().anyMatch(e -> e.getHP() > 0);
 
         if (!livingHeroes || !livingEnemies) {
-            System.out.println("\n¡El combate ha terminado!");
+            view.showMessage("\n¡El combate ha terminado!");
             if (livingHeroes) {
-                System.out.println("¡Los héroes han ganado!");
+                view.showMessage("¡Los héroes han ganado!");
             } else {
-                System.out.println("Los enemigos han vencido...");
+                view.showMessage("Los enemigos han vencido...");
             }
             return true;
         }
         return false;
     }
 
-    private void pause() {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            System.out.println("Error en la pausa.");
-        }
-    }
-
-    public void showMenu() {
+    // Métodos para acceder desde la vista principal
+    public void runMenu() {
         boolean exit = false;
-
         while (!exit) {
-            System.out.println("===================================");
-            System.out.println("     ¡Bienvenido al RPG de Josue!  ");
-            System.out.println("===================================");
-            System.out.println("1. Empezar combate");
-            System.out.println("2. Ver estadísticas de héroes");
-            System.out.println("3. Ver estadísticas de enemigos");
-            System.out.println("4. Salir");
-            System.out.print("Elige una opción: ");
-
-            int opcion = sc.nextInt();
-
+            int opcion = view.showMainMenu();
             switch (opcion) {
                 case 1:
-                    creation();  // Reinicia héroes, enemigos, miniBoss y orden de ataque
-                    miniBossAlreadyAdded = false;  // Reinicia el estado del mini jefe
+                    creation();
+                    miniBossAlreadyAdded = false;
                     start();
                     break;
                 case 2:
-                    for (Characters h : heroes) System.out.println(h);
+                    if (heroes != null) view.showHeroesList(heroes);
+                    else view.showMessage("No hay héroes cargados. Comienza un combate primero.");
                     break;
                 case 3:
-                    for (Characters e : enemies) System.out.println(e);
+                    if (enemies != null) view.showEnemiesList(enemies);
+                    else view.showMessage("No hay enemigos cargados. Comienza un combate primero.");
                     break;
                 case 4:
-                    System.out.println("¡Gracias por jugar!");
+                    view.showMessage("¡Gracias por jugar!");
                     exit = true;
                     break;
                 default:
-                    System.out.println("Opción inválida.");
+                    view.showMessage("Opción inválida.");
                     break;
             }
             System.out.println();

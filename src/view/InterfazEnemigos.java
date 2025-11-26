@@ -1,30 +1,33 @@
-package view;
-import javax.swing.*;
+// InterfazEnemigos MVC Adaptado
+// Vista: InterfazEnemigos
+// Controlador: EnemyController
+// Modelo: Characters, Enemy, TypeEnemy ya existen
 
+package view;
+
+import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
+// import java.util.ArrayList;
+import controller.EnemyController;
+import models.Characters;
+import models.Enemy;
+// import models.TypeEnemy;
 
 public class InterfazEnemigos extends JFrame {
-    private ArrayList<Characters> enemigos;
-    private JLabel nombreLabel, tipoLabel, hpLabel, mpLabel, ataqueLabel, defensaLabel, speedLabel, critDLabel,  critCLabel, habilidadesLabel;
+    private EnemyController controller;
+    private JLabel nombreLabel, tipoLabel, hpLabel, mpLabel, ataqueLabel, defensaLabel, speedLabel, critDLabel, critCLabel, habilidadesLabel;
     private JPanel panelInfo;
 
     public InterfazEnemigos() {
 
-        enemigos = new ArrayList<>();
-        enemigos.add(new Enemy("Limo", 80, 30, 15, 8,  12, 1.2f, 0.1f, 20, new ArrayList<>(java.util.List.of("SWEET_BREATH")), TypeEnemy.SORCERER));
-        enemigos.add(new Enemy("Berenjeno", 70, 40, 10, 10,8, 1.1f, 0.1f, 25, new ArrayList<>(java.util.List.of("SWEET_BREATH")), TypeEnemy.HEALER));
-        enemigos.add(new Enemy("Pinchorugo", 90, 20, 18, 12,10, 1.3f, 0.15f, 15, new ArrayList<>(java.util.List.of("SWEET_BREATH")), TypeEnemy.DEFENSIVE));
-        enemigos.add(new Enemy("Dragón Rojo", 200, 100, 35, 20,18, 2.0f, 0.3f, 40, new ArrayList<>(java.util.List.of("DRAGON_FIRE")), TypeEnemy.MINI_BOSS));
+        controller = new EnemyController();
 
         setUndecorated(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Interfaz en Pantalla Completa");
 
         JPanel panelFondo = new JPanel() {
-            private Image imagenFondo = new ImageIcon(
-                "img/Enemigos.jpg"
-            ).getImage();
+            private Image imagenFondo = new ImageIcon("img/Enemigos.jpg").getImage();
 
             @Override
             protected void paintComponent(Graphics g) {
@@ -34,7 +37,6 @@ public class InterfazEnemigos extends JFrame {
         };
         panelFondo.setLayout(null);
 
-        //Panel transparente para info
         panelInfo = new JPanel();
         panelInfo.setLayout(new GridLayout(10, 1));
         panelInfo.setOpaque(false);
@@ -65,20 +67,19 @@ public class InterfazEnemigos extends JFrame {
         panelInfo.add(habilidadesLabel);
 
         panelInfo.setBounds(732, 100, 800, 400);
-
         panelFondo.add(panelInfo);
 
         JButton botonDragon = crearBotonInvisible(110, 108, 150, 108);
-        botonDragon.addActionListener(e -> mostrarInformacion(enemigos.get(3)));
+        botonDragon.addActionListener(e -> mostrarInformacion(controller.getEnemy(3)));
 
         JButton botonBerenjeno = crearBotonInvisible(110, 247, 150, 108);
-        botonBerenjeno.addActionListener(e -> mostrarInformacion(enemigos.get(1)));
+        botonBerenjeno.addActionListener(e -> mostrarInformacion(controller.getEnemy(1)));
 
         JButton botonPinchorugo = crearBotonInvisible(110, 380, 150, 108);
-        botonPinchorugo.addActionListener(e -> mostrarInformacion(enemigos.get(2)));
+        botonPinchorugo.addActionListener(e -> mostrarInformacion(controller.getEnemy(2)));
 
         JButton botonLimo = crearBotonInvisible(109, 520, 150, 108);
-        botonLimo.addActionListener(e -> mostrarInformacion(enemigos.get(0)));
+        botonLimo.addActionListener(e -> mostrarInformacion(controller.getEnemy(0)));
 
         JButton botonBack = crearBotonInvisible(54, 710, 200, 60);
         botonBack.addActionListener(e -> {
@@ -117,18 +118,18 @@ public class InterfazEnemigos extends JFrame {
 
     private void mostrarInformacion(Characters personaje) {
         nombreLabel.setText("Nombre: " + personaje.getName());
-        tipoLabel.setText("Tipo: " + ((Enemy)personaje).getType().toString());
+        tipoLabel.setText("Tipo: " + ((Enemy) personaje).getType().toString());
         hpLabel.setText("HP: " + personaje.getHP());
         mpLabel.setText("MP: " + personaje.getMP());
         ataqueLabel.setText("Ataque: " + personaje.getAtack());
         defensaLabel.setText("Defensa: " + personaje.getDefense());
         speedLabel.setText("Velocidad: " + personaje.getSpeed());
-        critCLabel.setText("Prob. Crítico: " + personaje.getCrit_Change()*100+"%");
-        critDLabel.setText("Daño Crítico: " + personaje.getCrit_Damage()*100+"%");
+        critCLabel.setText("Prob. Crítico: " + personaje.getCrit_Change() * 100 + "%");
+        critDLabel.setText("Daño Crítico: " + personaje.getCrit_Damage() * 100 + "%");
         habilidadesLabel.setText("Habilidades: " + String.join(", ", personaje.getSkills()));
     }
-
     public static void main(String[] args) {
         SwingUtilities.invokeLater(InterfazEnemigos::new);
     }
 }
+

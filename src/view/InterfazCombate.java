@@ -12,7 +12,6 @@ import java.util.List;
 import models.Characters;
 import models.Heroes;
 import models.Enemy;
-import models.SkillsList;
 import models.TypeEnemy;
 import utils.Audio;
 
